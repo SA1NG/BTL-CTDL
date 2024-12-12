@@ -125,9 +125,9 @@ void show(DS_BuoiHoc Bh){
 int main(){
     DS_BuoiHoc bh;
     initBH(bh);
-    N_BuoiHoc x = BH(17, 12, 9, 2024, 1, 125);
+    N_BuoiHoc x = BH(19,12,12,2024,1,201);
     insertBH(bh, x);
-    x = BH(19, 12, 9, 2024, 2, 235);
+    x = BH(19,13,12,2024,2,301);
     insertBH(bh, x);
 //    insertBH(bh, BH(20, 12, 9, 2024, 3, 125));
     show(bh);
