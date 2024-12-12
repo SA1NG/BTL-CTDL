@@ -74,12 +74,13 @@ N_BuoiHoc BH(float Gio, short Ngay, short Thang, short Nam, short Buoi_so, short
     newBh->buoi_so = Buoi_so;
     newBh->trang_thai = 0;
     newBh->phong_hoc = Phong_hoc;
+    newBh->Next = NULL;
     return newBh;
 }
 // Them Buoi Hoc Vao Danh Sach
 void insertBH(DS_BuoiHoc& DSBH, N_BuoiHoc Bh){
     if(BHisEmpty(DSBH)){
-        Bh->Next = DSBH;
+        Bh->Next = NULL;
         DSBH = Bh;
     } else {
         N_BuoiHoc P = DSBH;
@@ -95,18 +96,23 @@ void TaoDanhSachBuoiHoc(DS_BuoiHoc& DSBH, short So_buoi, short Tan_suat){ // Tan
     while(R->Next != NULL) R = R->Next;
     for(int i = Tan_suat; i <= So_buoi;i++){
         //Tao ra 1 Buoi Hoc
-        N_BuoiHoc newBh = P;
+        N_BuoiHoc newBh = new BuoiHoc;
         newBh->buoi_so = i;
+        newBh->phong_hoc = P->phong_hoc;
+        newBh->trang_thai = 0;
+        newBh->Next = NULL;
         // Tao Thoi Gian Hoc Cho Buoi Moi
-        short So_ngay = SoNgay(newBh->thang, newBh->nam);
-        if (newBh->ngay + 7 <= So_ngay){
-            newBh->ngay += 7;
-        } else { 
-            newBh->ngay = 7 - (So_ngay - newBh->ngay);
-            newBh->thang++;
+        short So_ngay = SoNgay(R->thang, R->nam);
+        if (R->ngay + Tan_suat <= So_ngay) {
+            newBh->ngay = R->ngay + Tan_suat;
+            newBh->thang = R->thang;
+            newBh->nam = R->nam;
+        } else {
+            newBh->ngay = R->ngay + Tan_suat - So_ngay;
+            newBh->thang = R->thang + 1;
             if (newBh->thang > 12) {
                 newBh->thang = 1;
-                newBh->nam++;
+                newBh->nam = R->nam + 1;
             }
         }
         R->Next = newBh;
@@ -115,9 +121,13 @@ void TaoDanhSachBuoiHoc(DS_BuoiHoc& DSBH, short So_buoi, short Tan_suat){ // Tan
     }
 }
 
-void show(DS_BuoiHoc Bh){
-    while(Bh != NULL){
-        cout << "buoi so: " << Bh->buoi_so << " | " << Bh->gio << "/" << Bh->thang << "/" << Bh->nam << endl;
+void show(DS_BuoiHoc Bh) {
+    if (Bh == NULL) {
+        cout << "rong" << endl;
+        return;
+    }
+    while (Bh != NULL) {
+        cout << "Buoi so: " << Bh->buoi_so << endl;
         Bh = Bh->Next;
     }
 }
@@ -127,9 +137,9 @@ int main(){
     initBH(bh);
     N_BuoiHoc x = BH(19,12,12,2024,1,201);
     insertBH(bh, x);
-    x = BH(19,13,12,2024,2,301);
-    insertBH(bh, x);
-//    insertBH(bh, BH(20, 12, 9, 2024, 3, 125));
+    N_BuoiHoc y = BH(19,13,12,2024,2,301);
+    insertBH(bh, y);
+    insertBH(bh, BH(20, 12, 9, 2024, 3, 125));
     show(bh);
 }
 
