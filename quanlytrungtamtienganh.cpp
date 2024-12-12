@@ -204,7 +204,6 @@ N_HocVien HV(int ma_so, string ten, int tuoi, int cccd){
     newHv->tt_hv.ten = ten;
     newHv->tt_hv.tuoi = tuoi;
     newHv->tt_hv.cccd = cccd;
-    newHv-> hoc_phi= 0;
     newHv->Ds_kh = NULL;
     newHv->Next = NULL;
     return newHv;
@@ -287,12 +286,11 @@ bool KHisEmpty(DS_KhoaHoc& DSKH){
     return (DSKH == NULL);
 }
 // Tao Ra Mot Nut Khoa Hoc
-N_KhoaHoc KH(int ma_so, string ten, string thong_tin, int hoc_phi, N_GiangVien Gv ){
+N_KhoaHoc KH(int Ma_so, string Ten, int Gia_tien, N_GiangVien Gv ){
     N_KhoaHoc Kh = new KhoaHoc;
-    Kh->ma_so = ma_so;
-    Kh->ten = ten;
-    Kh->thong_tin = thong_tin;
-    Kh->hoc_phi = hoc_phi;
+    Kh->ma_so = Ma_so;
+    Kh->ten = Ten;
+    Kh->gia_tien = Gia_tien;
     Kh->Gv = Gv;
     Kh->Ds_hv = NULL;
     Kh->Next = NULL;
@@ -351,12 +349,7 @@ int SoLuongKh(DS_KhoaHoc DSKH){
     return 1 + SoLuongKh(DSKH->Next);
 }
 // Tinh So Luong Buoi Hoc Cua Khoa Hoc Trong 1 Thang
-int SoLuongBuoiHoc(N_KhoaHoc& Kh){
-    N_BuoiHoc newBh = Kh->Ds_bh;
-    while(newBh != NULL){
-        if(newBh.)
-    }
-}
+
 //Hien Thi Danh Sach Khoa Hoc
 void ShowKH(DS_KhoaHoc DSKH){
     if(KHisEmpty(DSKH)){
