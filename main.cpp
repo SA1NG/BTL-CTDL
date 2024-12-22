@@ -35,7 +35,7 @@ short TinhThu(int Ngay, int Thang, int Nam) {
         Thang += 12;
         Nam -= 1;
     }
-    short thu = (Ngay + (13 * (Thang + 1)) / 5 + Nam % 100 + Nam % 100 / 4 + Nam / 100 / 4 + 5 * Nam / 100) % 7;
+    short thu = (Ngay + (13 * (Thang + 1)) / 5 + (Nam % 100) + (Nam % 100) / 4 + (Nam / 100) / 4 + 5 * (Nam / 100)) % 7;
 
     return thu / 7;
 }
@@ -94,10 +94,11 @@ void TaoDanhSachBuoiHoc(DS_BuoiHoc& DSBH, short So_buoi, short Tan_suat){ // Tan
     N_BuoiHoc P = DSBH;
     N_BuoiHoc R = DSBH;
     while(R->Next != NULL) R = R->Next;
-    for(int i = Tan_suat; i <= So_buoi;i++){
+    for(int i = Tan_suat + 1; i <= So_buoi;i++){
         //Tao ra 1 Buoi Hoc
         N_BuoiHoc newBh = new BuoiHoc;
         newBh->buoi_so = i;
+        newBh->gio = P->gio;
         newBh->phong_hoc = P->phong_hoc;
         newBh->trang_thai = 0;
         newBh->Next = NULL;
@@ -113,7 +114,7 @@ void TaoDanhSachBuoiHoc(DS_BuoiHoc& DSBH, short So_buoi, short Tan_suat){ // Tan
             if (newBh->thang > 12) {
                 newBh->thang = 1;
                 newBh->nam = R->nam + 1;
-            }
+            } else newBh->nam = R->nam;
         }
         R->Next = newBh;
         R = R->Next;
@@ -127,7 +128,7 @@ void show(DS_BuoiHoc Bh) {
         return;
     }
     while (Bh != NULL) {
-        cout << "Buoi so: " << Bh->buoi_so << endl;
+        cout << "Buoi so: " << Bh->buoi_so << " | " << Bh->gio << "h/ " << Bh->ngay << "/ " << Bh->thang << "/ " << Bh->nam << endl;
         Bh = Bh->Next;
     }
 }
@@ -139,7 +140,8 @@ int main(){
     insertBH(bh, x);
     N_BuoiHoc y = BH(19,13,12,2024,2,301);
     insertBH(bh, y);
-    insertBH(bh, BH(20, 12, 9, 2024, 3, 125));
+    insertBH(bh, BH(20, 15, 12, 2024, 3, 125));
+    TaoDanhSachBuoiHoc(bh, 20, 3);
     show(bh);
 }
 

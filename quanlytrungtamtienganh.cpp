@@ -59,6 +59,7 @@ struct BuoiHoc {
     float gio;
     short ngay, thang, nam;
     short buoi_so;
+    short phong_hoc;
     bool trang_thai;
     BuoiHoc* Next;
 };
@@ -76,6 +77,117 @@ struct KhoaHoc {
 };
 
 // CAC THAO TAC VOI BUOI HOC
+// CAC Thao Tac Tinh Ngay
+
+// Ham Kiem Tra Nam Nhuan
+bool NamNhuan(short Nam){
+    return (Nam % 4 == 0 && Nam % 100 != 0) || (Nam % 400 == 0);
+}
+// Trả ve So Ngay Trong Thang
+short SoNgay(short Thang, short Nam){
+    switch (Thang) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            return 31;
+        case 4: case 6: case 9: case 11:
+            return 30;
+        case 2:
+            return NamNhuan(Nam) ? 29 : 28;
+        default: return 0;
+    }
+}
+// Tinh Thu Trong Tuan
+short TinhThu(int Ngay, int Thang, int Nam) {
+    // Cong Thuc Zeller Congruence
+    if (Thang < 3) {
+        Thang += 12;
+        Nam -= 1;
+    }
+    short thu = (Ngay + (13 * (Thang + 1)) / 5 + (Nam % 100) + (Nam % 100) / 4 + (Nam / 100) / 4 + 5 * (Nam / 100)) % 7;
+
+    return thu / 7;
+}
+
+// CAC THAO TAC VOI BUOI HOC
+
+// Khoi Tao Danh Sach Buoi Hoc
+void initBH(DS_BuoiHoc& DSBH){
+    DSBH = NULL;
+}
+// Kiem Tra Danh Sach Rong
+bool BHisEmpty(DS_BuoiHoc& DSBH){
+    return (DSBH == NULL);
+}
+// Tao Ra Nut Buoi Hoc
+N_BuoiHoc BH(float Gio, short Ngay, short Thang, short Nam, short Buoi_so, short Phong_hoc){
+    // Kiem Tra Thoi Gian Hop Le
+    if((Gio > 21 || Gio < 17) && TinhThu(Ngay, Thang, Nam) > 1){
+        cout << "Gio Hoc Nen Trong Khoang 17h Den 21h";
+        return NULL;
+    }
+    if(Thang < 1 || Thang > 12){
+        cout << "Thang Khong Hop Le";
+        return NULL;
+    }
+    if (Ngay < 1 || Ngay > SoNgay(Thang, Nam)) {
+        cout << "Ngay Khong Hop Le" << endl;
+        return NULL;
+    }
+    // Tao Ra Buoi Hoc Dau Tien
+    N_BuoiHoc newBh = new BuoiHoc;
+    newBh->gio = Gio;
+    newBh->ngay = Ngay;
+    newBh->thang = Thang;
+    newBh->nam = Nam;
+    newBh->buoi_so = Buoi_so;
+    newBh->trang_thai = 0;
+    newBh->phong_hoc = Phong_hoc;
+    newBh->Next = NULL;
+    return newBh;
+}
+// Them Buoi Hoc Vao Danh Sach
+void insertBH(DS_BuoiHoc& DSBH, N_BuoiHoc Bh){
+    if(BHisEmpty(DSBH)){
+        Bh->Next = NULL;
+        DSBH = Bh;
+    } else {
+        N_BuoiHoc P = DSBH;
+        while(P->Next != NULL) P = P->Next;
+        P->Next = Bh;
+    }
+}
+
+//Tao Danh Sach Buoi Hoc
+void TaoDanhSachBuoiHoc(DS_BuoiHoc& DSBH, short So_buoi, short Tan_suat){ // Tan Suat Lon La 7
+    N_BuoiHoc P = DSBH;
+    N_BuoiHoc R = DSBH;
+    while(R->Next != NULL) R = R->Next;
+    for(int i = Tan_suat + 1; i <= So_buoi;i++){
+        //Tao ra 1 Buoi Hoc
+        N_BuoiHoc newBh = new BuoiHoc;
+        newBh->buoi_so = i;
+        newBh->gio = P->gio;
+        newBh->phong_hoc = P->phong_hoc;
+        newBh->trang_thai = 0;
+        newBh->Next = NULL;
+        // Tao Thoi Gian Hoc Cho Buoi Moi
+        short So_ngay = SoNgay(R->thang, R->nam);
+        if (R->ngay + Tan_suat <= So_ngay) {
+            newBh->ngay = R->ngay + Tan_suat;
+            newBh->thang = R->thang;
+            newBh->nam = R->nam;
+        } else {
+            newBh->ngay = R->ngay + Tan_suat - So_ngay;
+            newBh->thang = R->thang + 1;
+            if (newBh->thang > 12) {
+                newBh->thang = 1;
+                newBh->nam = R->nam + 1;
+            }
+        }
+        R->Next = newBh;
+        R = R->Next;
+        P = P->Next;
+    }
+}
 
 
 // CAC THAO TAC VOI THONG TIN CA NHAN
@@ -121,13 +233,13 @@ void insertGV(DS_GiangVien& DSGV, N_GiangVien Gv){
 // Tim Kiem Giang Vien Dua Vao Ma So
 N_GiangVien findGVbyMaSo(DS_GiangVien& DSGV, int MaSo){
     if(DSGV == NULL) return NULL;
-    N_GiangVien Gv = DSGV;
-    while(Gv != NULL){
-        if(MaSo != Gv->tt_gv.ma_so){
-            Gv = Gv->Next;
+    N_GiangVien P = DSGV;
+    while(P != NULL){
+        if(MaSo != P->tt_gv.ma_so){
+            P = P->Next;
         } else break;
     }
-    return Gv;
+    return P;
 }
 
 // Xoa Giang Vien
@@ -145,16 +257,25 @@ bool deleteGV(DS_GiangVien& DSGV, N_GiangVien Gv){
         return true;
     }
 
-    N_GiangVien newGv = DSGV;
-    while(newGv->Next != NULL && newGv->Next != Gv){
-        newGv = newGv->Next;
+    N_GiangVien P = DSGV;
+    while(P->Next != NULL && P->Next != Gv){
+        P = P->Next;
     }
-    if(newGv->Next == Gv){
-        newGv->Next = Gv->Next;
+    if(P->Next == Gv){
+        P->Next = Gv->Next;
         delete Gv;
         return true;
     }
     return false;
+}
+// Xoa Danh Sach Giang Vien
+void deleteAllGV(DS_GiangVien& DSGV){
+    while(DSGV != NULL){
+        N_GiangVien P = DSGV;
+        DSGV = P->Next;
+        delete P;
+    }
+    return;
 }
 // Them Khoa Hoc Cho Giang Vien
 void insertKHtoGV(N_GiangVien Gv, N_KhoaHoc Kh){
@@ -179,11 +300,11 @@ void ShowGV(DS_GiangVien DSGV){
         cout << "Hien tai chua co giang vien nao";
         return;
     }
-    N_GiangVien Gv = DSGV;
+    N_GiangVien P = DSGV;
     int i = 1;
-    while(Gv != NULL){
-        cout << i << ". " << Gv->tt_gv.ma_so << "\t" << Gv->tt_gv.ten << endl;
-        Gv = Gv->Next;
+    while(P != NULL){
+        cout << i << ". " << P->tt_gv.ma_so << "\t" << P->tt_gv.ten << endl;
+        P = P->Next;
         i++;
     }
 }
@@ -216,13 +337,13 @@ void insertHV(DS_HocVien& DSHV, N_HocVien Hv){
 // Tim Kiem Hoc Vien Bang Ma So
 N_HocVien findHVbyMaSo(DS_HocVien& DSHV, int MaSo){
     if(DSHV == NULL) return NULL;
-    N_HocVien Hv = DSHV;
-    while(Hv != NULL){
-        if(MaSo != Hv->tt_hv.ma_so){
-            Hv = Hv->Next;
+    N_HocVien P = DSHV;
+    while(P != NULL){
+        if(MaSo != P->tt_hv.ma_so){
+            P = P->Next;
         } else break;
     }
-    return Hv;
+    return P;
 }
 // Xoa Hoc Vien
 bool deleteHV(DS_HocVien& DSHV, N_HocVien Hv){
@@ -239,12 +360,12 @@ bool deleteHV(DS_HocVien& DSHV, N_HocVien Hv){
         return true;
     }
 
-    N_HocVien newHv = DSHV;
-    while(newHv->Next != NULL && newHv->Next != Hv){
-        newHv = newHv->Next;
+    N_HocVien P = DSHV;
+    while(P->Next != NULL && P->Next != Hv){
+        P = P->Next;
     }
-    if(newHv->Next == Hv){
-        newHv->Next = Hv->Next;
+    if(P->Next == Hv){
+        P->Next = Hv->Next;
         delete Hv;
         return true;
     }
@@ -266,11 +387,11 @@ void ShowHV(DS_HocVien DSHV){
         cout << "Hien tai chua co hoc vien nao.";
         return;
     }
-    N_HocVien Hv = DSHV;
+    N_HocVien P = DSHV;
     int i = 1;
-    while(Hv != NULL){
-        cout << i << ". " << Hv->tt_hv.ma_so << "\t" << Hv->tt_hv.ten << endl;
-        Hv = Hv->Next;
+    while(P != NULL){
+        cout << i << ". " << P->tt_hv.ma_so << "\t" << P->tt_hv.ten << endl;
+        P = P->Next;
         i++;
     }
 }
@@ -293,6 +414,7 @@ N_KhoaHoc KH(int Ma_so, string Ten, int Gia_tien, N_GiangVien Gv ){
     Kh->gia_tien = Gia_tien;
     Kh->Gv = Gv;
     Kh->Ds_hv = NULL;
+    Kh->Ds_bh = NULL;
     Kh->Next = NULL;
     return Kh;
 }
