@@ -486,3 +486,288 @@ void ShowKH(DS_KhoaHoc DSKH){
         i++;
     }
 }
+/ham hien thi trung tamtam
+void HienThiTrungTam() {
+    cout << "\n========== TRUNG TÂM TIẾNG ANH TOEIC ==========\n";
+    cout << "DANH SÁCH PHÒNG HỌC:\n";
+    cout << "- Tầng 2: 201 202 203 204\n";
+    cout << "- Tầng 3: 301 302 303 304\n";
+    cout << "- Tầng 4: 401 402 403 404\n\n";
+    cout << "DANH SÁCH KÍP HỌC:\n";
+    cout << "- Kíp 1: 8h - 10h\n";
+    cout << "- Kíp 2: 13h - 15h\n";
+    cout << "- Kíp 3: 15h - 17h\n";
+    cout << "- Kíp 4: 17h - 19h\n";
+    cout << "- Kíp 5: 19h - 21h\n";
+    cout << "==============================================\n";
+    cout << "Nhấn phím bất kỳ để quay lại menu chính...\n";
+    cin.ignore();
+    cin.get();
+}
+//cau truc menu chinh
+void MenuChinh() {
+    int choice;
+    do {
+        cout << "\n========== MENU CHÍNH ==========\n";
+        cout << "1. Học viên\n";
+        cout << "2. Giảng viên\n";
+        cout << "3. Khóa học\n";
+        cout << "4. Thống kê\n";
+        cout << "5. Hiển thị thông tin trung tâm\n";
+        cout << "6. Thoát\n";
+        cout << "Lựa chọn của bạn: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: MenuHocVien(); break;
+            case 2: MenuGiangVien(); break;
+            case 3: MenuKhoaHoc(); break;
+            case 4: MenuThongKe(); break;
+            case 5: HienThiTrungTam(); break;
+            case 6: cout << "Thoát chương trình...\n"; break;
+            default: cout << "Lựa chọn không hợp lệ!\n";
+        }
+    } while (choice != 6);
+}
+//cau truc menu hoc vien
+void MenuHocVien(DS_HocVien& DSHV) {
+    int choice;
+    do {
+        cout << "\n=== MENU HỌC VIÊN ===\n";
+        cout << "1. Hiển thị danh sách học viên\n";
+        cout << "2. Thêm học viên\n";
+        cout << "3. Xóa học viên\n";
+        cout << "4. Hiển thị thông tin học viên\n";
+        cout << "5. Quay lại\n";
+        cout << "Lựa chọn của bạn: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                N_HocVien P = DSHV;
+                while (P != NULL) {
+                    cout << "Mã số: " << P->tt_hv.ma_so << ", Tên: " << P->tt_hv.ten << endl;
+                    P = P->Next;
+                }
+                break;
+            }
+            case 2: {
+                ThongTinCaNhan tt;
+                cout << "Nhập mã số: "; cin >> tt.ma_so;
+                cin.ignore();
+                cout << "Nhập tên: "; getline(cin, tt.ten);
+                cout << "Nhập tuổi: "; cin >> tt.tuoi;
+                cin.ignore();
+                cout << "Nhập CCCD: "; getline(cin, tt.cccd);
+                cout << "Nhập SĐT: "; getline(cin, tt.sdt);
+                cout << "Nhập trình độ: "; getline(cin, tt.trinh_do);
+                insertHV(DSHV, tt);
+                break;
+            }
+            case 3: {
+                int ma;
+                cout << "Nhập mã số học viên cần xóa: "; cin >> ma;
+                N_HocVien hv = findHVbyMaSo(DSHV, ma);
+                if (deleteHV(DSHV, hv))
+                    cout << "Xóa học viên thành công!\n";
+                else
+                    cout << "Không tìm thấy học viên!\n";
+                break;
+            }
+            case 4: {
+                int ma;
+                cout << "Nhập mã số học viên cần tìm: "; cin >> ma;
+                N_HocVien hv = findHVbyMaSo(DSHV, ma);
+                if (hv != NULL)
+                    cout << "Mã số: " << hv->tt_hv.ma_so << ", Tên: " << hv->tt_hv.ten << endl;
+                else
+                    cout << "Không tìm thấy học viên!\n";
+                break;
+            }
+            case 5: return;
+            default: cout << "Lựa chọn không hợp lệ!\n";
+        }
+    } while (choice != 5);
+}
+//cau truc menu giang vien
+void MenuGiangVien(DS_GiangVien& DSGV) {
+    int choice;
+    do {
+        cout << "\n=== MENU GIẢNG VIÊN ===\n";
+        cout << "1. Hiển thị danh sách giảng viên\n";
+        cout << "2. Thêm giảng viên\n";
+        cout << "3. Xóa giảng viên\n";
+        cout << "4. Hiển thị thông tin giảng viên\n";
+        cout << "5. Quay lại\n";
+        cout << "Lựa chọn của bạn: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                N_GiangVien P = DSGV;
+                while (P != NULL) {
+                    cout << "Mã số: " << P->tt_gv.ma_so << ", Tên: " << P->tt_gv.ten << endl;
+                    P = P->Next;
+                }
+                break;
+            }
+            case 2: {
+                ThongTinCaNhan tt;
+                int luong;
+                cout << "Nhập mã số: "; cin >> tt.ma_so;
+                cin.ignore();
+                cout << "Nhập tên: "; getline(cin, tt.ten);
+                cout << "Nhập tuổi: "; cin >> tt.tuoi;
+                cin.ignore();
+                cout << "Nhập CCCD: "; getline(cin, tt.cccd);
+                cout << "Nhập SĐT: "; getline(cin, tt.sdt);
+                cout << "Nhập lương: "; cin >> luong;
+                insertGV(DSGV, tt, luong);
+                break;
+            }
+            case 3: {
+                int ma;
+                cout << "Nhập mã số giảng viên cần xóa: "; cin >> ma;
+                N_GiangVien gv = findGVbyMaSo(DSGV, ma);
+                if (deleteGV(DSGV, gv))
+                    cout << "Xóa giảng viên thành công!\n";
+                else
+                    cout << "Không tìm thấy giảng viên!\n";
+                break;
+            }
+            case 4: {
+                int ma;
+                cout << "Nhập mã số giảng viên cần tìm: "; cin >> ma;
+                N_GiangVien gv = findGVbyMaSo(DSGV, ma);
+                if (gv != NULL)
+                    cout << "Mã số: " << gv->tt_gv.ma_so << ", Tên: " << gv->tt_gv.ten << endl;
+                else
+                    cout << "Không tìm thấy giảng viên!\n";
+                break;
+            }
+            case 5: return;
+            default: cout << "Lựa chọn không hợp lệ!\n";
+        }
+    } while (choice != 5);
+}
+//cau truc menu khoa hoc
+void MenuKhoaHoc(DS_KhoaHoc& DSKH) {
+    int choice;
+    do {
+        cout << "\n=== MENU KHÓA HỌC ===\n";
+        cout << "1. Hiển thị danh sách khóa học\n";
+        cout << "2. Thêm khóa học\n";
+        cout << "3. Xóa khóa học\n";
+        cout << "4. Tìm kiếm khóa học\n";
+        cout << "5. Quay lại\n";
+        cout << "Lựa chọn của bạn: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                N_KhoaHoc P = DSKH;
+                while (P != NULL) {
+                    cout << "Mã khóa học: " << P->ma_so << ", Tên: " << P->ten << endl;
+                    P = P->Next;
+                }
+                break;
+            }
+            case 2: {
+                short ma;
+                string ten;
+                cout << "Nhập mã khóa học: "; cin >> ma;
+                cin.ignore();
+                cout << "Nhập tên khóa học: "; getline(cin, ten);
+                insertKh(DSKH, ma, ten, 0, 0, 0, "", NULL, NULL, NULL);
+                break;
+            }
+            case 3: {
+                short ma;
+                cout << "Nhập mã khóa học cần xóa: "; cin >> ma;
+                N_KhoaHoc kh = findKHbyMaSo(DSKH, ma);
+                if (deleteKh(DSKH, kh))
+                    cout << "Xóa khóa học thành công!\n";
+                else
+                    cout << "Không tìm thấy khóa học!\n";
+                break;
+            }
+            case 4: {
+                short ma;
+                cout << "Nhập mã khóa học cần tìm: "; cin >> ma;
+                N_KhoaHoc kh = findKHbyMaSo(DSKH, ma);
+                if (kh != NULL)
+                    cout << "Tên khóa học: " << kh->ten << endl;
+                else
+                    cout << "Không tìm thấy khóa học!\n";
+                break;
+            }
+            case 5: return;
+            default: cout << "Lựa chọn không hợp lệ!\n";
+        }
+    } while (choice != 5);
+}
+//cau truc menu thong ke
+void MenuThongKe(DS_HocVien DSHV, DS_GiangVien DSGV, DS_KhoaHoc DSKH) {
+    int choice;
+    do {
+        cout << "\n=== MENU THỐNG KÊ ===\n";
+        cout << "1. Hiển thị tổng quan\n";
+        cout << "2. Hiển thị doanh thu hàng tháng\n";
+        cout << "3. Quay lại\n";
+        cout << "Lựa chọn của bạn: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                // Thống kê tổng quan
+                int soHocVien = SoLuongHV(DSHV);
+                int soGiangVien = SoLuongGV(DSGV);
+                int soKhoaHoc = 0;
+                N_KhoaHoc P = DSKH;
+                while (P != NULL) {
+                    soKhoaHoc++;
+                    P = P->Next;
+                }
+
+                cout << "\n===== TỔNG QUAN =====\n";
+                cout << "Tổng số học viên: " << soHocVien << endl;
+                cout << "Tổng số giảng viên: " << soGiangVien << endl;
+                cout << "Tổng số khóa học: " << soKhoaHoc << endl;
+                cout << "======================\n";
+                break;
+            }
+            case 2: {
+                // Thống kê doanh thu
+                int doanhThu = 0;
+                N_KhoaHoc P = DSKH;
+                while (P != NULL) {
+                    if (P->trang_thai == true) { // Chỉ tính các khóa học đã hoàn thành
+                        doanhThu += P->gia_tien * SoLuongHV(P->Ds_hv_kh);
+                    }
+                    P = P->Next;
+                }
+
+                cout << "\n===== DOANH THU HÀNG THÁNG =====\n";
+                cout << "Tổng doanh thu từ các khóa học hoàn thành: " << doanhThu << " VND\n";
+                cout << "=================================\n";
+                break;
+            }
+            case 3: return;
+            default:
+                cout << "Lựa chọn không hợp lệ!\n";
+        }
+    } while (choice != 3);
+}
+// Ham Main
+int main() {
+    DS_HocVien DSHV;
+    DS_GiangVien DSGV;
+    DS_KhoaHoc DSKH;
+
+    initHocVien(DSHV);
+    initGV(DSGV);
+    initKhoaHoc(DSKH);
+
+    MenuChinh();
+    return 0;
+}
