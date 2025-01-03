@@ -521,8 +521,10 @@ void HienThiTrungTam() {
     cin.get();
 }
 void MenuHocVien(DS_HocVien& DSHV);
+void MenuGiangVien(DS_GiangVien& DSGV);
+void MenuKhoaHoc(DS_KhoaHoc& DSKH, DS_GiangVien& DSGV)
 //cau truc menu chinh
-void MenuChinh() {
+void MenuChinh(DS_HocVien& DSHV, DS_GiangVien& DSGV, DS_KhoaHoc& DSKH) {
     int choice;
     do {
         cout << "\n========== MENU CHÍNH ==========\n";
@@ -537,9 +539,9 @@ void MenuChinh() {
 
         switch (choice) {
             case 1: MenuHocVien(DSHV); break;
-            case 2: MenuGiangVien(); break;
-            case 3: MenuKhoaHoc(); break;
-            case 4: MenuThongKe(); break;
+            case 2: MenuGiangVien(DSGVDSGV); break;
+            case 3: MenuKhoaHoc(DSKHDSKH); break;
+            case 4: MenuThongKe(DSHV,DSGV,DSKHDSKH); break;
             case 5: HienThiTrungTam(); break;
             case 6: cout << "Thoát chương trình...\n"; break;
             default: cout << "Lựa chọn không hợp lệ!\n";
@@ -835,7 +837,7 @@ int main() {
     initGV(DSGV);
     initKhoaHoc(DSKH);
 
-    MenuChinh();
+    MenuChinh(DSHV, DSGV, DSKH);
     // Giải phóng bộ nhớ trước khi kết thúc chương trình
     GiaiPhongBoNho(DSHV, DSGV, DSKH);
     return 0;
