@@ -810,6 +810,20 @@ void MenuThongKe(DS_HocVien DSHV, DS_GiangVien DSGV, DS_KhoaHoc DSKH) {
         }
     } while (choice != 3);
 }
+/* Giải phóng bộ nhớ an toàn */
+void GiaiPhongBoNho(DS_HocVien& DSHV, DS_GiangVien& DSGV, DS_KhoaHoc& DSKH) {
+    deleteDSDSGV(DSGV); 
+    while (DSHV != NULL) {
+        N_HocVien temp = DSHV;
+        DSHV = DSHV->Next;
+        delete temp;
+    }
+    while (DSKH != NULL) {
+        N_KhoaHoc temp = DSKH;
+        DSKH = DSKH->Next;
+        delete temp;
+    }
+}
 // Ham Main
 int main() {
     DS_HocVien DSHV;
@@ -822,8 +836,6 @@ int main() {
 
     MenuChinh();
     // Giải phóng bộ nhớ trước khi kết thúc chương trình
-        deleteDSDSGV(DSGV); // Giải phóng danh sách giảng viên
-        while (DSHV != NULL) deleteHV(DSHV, DSHV); // Giải phóng danh sách học viên
-        while (DSKH != NULL) deleteKh(DSKH, DSKH); // Giải phóng danh sách khóa học
+    GiaiPhongBoNho(DSHV, DSGV, DSKH);
     return 0;
 }
