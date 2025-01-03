@@ -370,7 +370,7 @@ void insertKHtoHV(DS_KhoaHoc_HV& DSKHHV, int Ma_so){
     DSKHHV = newKhHv;
 }
 // Xóa Khóa Học Của Học Viên
-bool deleteKhHv(DS_KhoaHoc_HV& DSKHHV, N_HocVien_KH HvKh){
+bool deleteKhHv(DS_KhoaHoc_HV& DSKHHV, N_KhoaHoc_HV& HvKh){
     if(DSKHHV == NULL || HvKh == NULL) return false;
     if(DSKHHV == HvKh && HvKh->Next == NULL){
         DSKHHV = NULL;
@@ -384,7 +384,7 @@ bool deleteKhHv(DS_KhoaHoc_HV& DSKHHV, N_HocVien_KH HvKh){
         return true;
     }
 
-    N_HocVien_KH P = DSKHHV;
+    N_KhoaHoc_HV P = DSKHHV;
     while(P->Next != NULL && P->Next != HvKh){
         P = P->Next;
     }
@@ -520,6 +520,7 @@ void HienThiTrungTam() {
     cin.ignore();
     cin.get();
 }
+void MenuHocVien(DS_HocVien& DSHV);
 //cau truc menu chinh
 void MenuChinh() {
     int choice;
@@ -535,7 +536,7 @@ void MenuChinh() {
         cin >> choice;
 
         switch (choice) {
-            case 1: MenuHocVien(); break;
+            case 1: MenuHocVien(DSHV); break;
             case 2: MenuGiangVien(); break;
             case 3: MenuKhoaHoc(); break;
             case 4: MenuThongKe(); break;
@@ -667,7 +668,7 @@ void MenuGiangVien(DS_GiangVien& DSGV) {
     } while (choice != 5);
 }
 //cau truc menu khoa hoc
-void MenuKhoaHoc(DS_KhoaHoc& DSKH) {
+void MenuKhoaHoc(DS_KhoaHoc& DSKH, DS_GiangVien& DSGV) {
     int choice;
     do {
         cout << "\n=== MENU KHÓA HỌC ===\n";
