@@ -821,5 +821,9 @@ int main() {
     initKhoaHoc(DSKH);
 
     MenuChinh();
+    // Giải phóng bộ nhớ trước khi kết thúc chương trình
+        deleteDSDSGV(DSGV); // Giải phóng danh sách giảng viên
+        while (DSHV != NULL) deleteHV(DSHV, DSHV); // Giải phóng danh sách học viên
+        while (DSKH != NULL) deleteKh(DSKH, DSKH); // Giải phóng danh sách khóa học
     return 0;
 }
