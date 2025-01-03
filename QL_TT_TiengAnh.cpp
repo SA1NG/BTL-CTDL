@@ -689,13 +689,49 @@ void MenuKhoaHoc(DS_KhoaHoc& DSKH) {
                 break;
             }
             case 2: {
-                short ma;
-                string ten;
-                cout << "Nhập mã khóa học: "; cin >> ma;
+               short ma_so, so_buoi, muc_tieu;
+                string ten, gioi_thieu;
+                int gia_tien;
+                short ma_gv; // Mã số giảng viên
+                N_GiangVien gv = NULL;
+
+                cout << "Nhập mã số khóa học: ";
+                cin >> ma_so;
                 cin.ignore();
-                cout << "Nhập tên khóa học: "; getline(cin, ten);
-                insertKh(DSKH, ma, ten, 0, 0, 0, "", NULL, NULL, NULL);
-                break;
+
+                cout << "Nhập tên khóa học: ";
+                getline(cin, ten);
+
+                cout << "Nhập giá tiền: ";
+                cin >> gia_tien;
+
+                cout << "Nhập số buổi học: ";
+                cin >> so_buoi;
+
+                cout << "Nhập mục tiêu: ";
+                cin >> muc_tieu;
+                cin.ignore();
+
+                cout << "Nhập giới thiệu khóa học: ";
+                getline(cin, gioi_thieu);
+
+                // Tìm giảng viên theo mã số
+                cout << "Nhập mã số giảng viên phụ trách: ";
+                cin >> ma_gv;
+                gv = findGVbyMaSo(DSGV, ma_gv);
+                if (gv == NULL) {
+                    cout << "Không tìm thấy giảng viên có mã số này! Khóa học sẽ không có giảng viên phụ trách.\n";
+                }
+
+                // Khởi tạo danh sách buổi học và học viên khóa học
+                DS_BuoiHoc dsbh;
+                DS_HocVien_KH dshvkh;
+                initBH(dsbh); // Khởi tạo danh sách buổi học trống
+                dshvkh = NULL; // Danh sách học viên trống
+
+                // Thêm khóa học vào danh sách
+                insertKh(DSKH, ma_so, ten, gia_tien, so_buoi, muc_tieu, gioi_thieu, gv, dsbh, dshvkh);
+                cout << "Thêm khóa học thành công!\n";
             }
             case 3: {
                 short ma;
